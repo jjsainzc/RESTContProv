@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RESTContProv</string>
+    <string name="leyendo_espere">Espere ...</string>
+    <string name="operacion_cancelada">Cancelado</string>
+</resources>
