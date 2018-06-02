@@ -61,7 +61,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="http://192.168.1.10/AndroidBaseDatos/public"
+        android:text="http://jjsc.ddns.net:1154/AndroidBaseDatos/webresources"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leer" />

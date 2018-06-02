@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -37,7 +38,11 @@ import aplicaciones.sainz.jorge.restcontprov.comunicaciones.ConexionesRS;
 import aplicaciones.sainz.jorge.restcontprov.conversores.ConversorDouble;
 import aplicaciones.sainz.jorge.restcontprov.conversores.ConversorFecha;
 import aplicaciones.sainz.jorge.restcontprov.datos.Persona;
+import aplicaciones.sainz.jorge.restcontprov.utilidades.Auth;
 import aplicaciones.sainz.jorge.restcontprov.utilidades.XMLFormat;
+
+import static aplicaciones.sainz.jorge.restcontprov.comunicaciones.JWT.createToken;
+import static aplicaciones.sainz.jorge.restcontprov.comunicaciones.JWT.verifyToken;
 
 /**
  * @author JJSC, 2018
@@ -197,16 +202,27 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                   Lee el RESTfull
                  */
                 if (operacion.equalsIgnoreCase("leerREST")) {
-                    resultado = ConexionesRS.connectREST(
-                            url.getText().toString(),
-                            "/personas_rs",
-                            new HashMap<String, String>(),
-                            "application/x-www-form-urlencoded;charset=UTF-8",
-                            "application/xml",
-                            "",
-                            "GET",
-                            10000,
-                            10000);
+                    List<String> roles = new ArrayList();
+                    roles.add("read");
+
+                    String payload = new Gson().toJson(new Auth("admin", "admin", roles));
+                    String secretKey = "e6K0v3I5s4B2l9G8";
+                    String signatureAlg = "HS512";
+
+                    String auth = createToken(secretKey, payload, signatureAlg);
+                    if (verifyToken(secretKey, auth, signatureAlg)) {
+                        resultado = ConexionesRS.connectREST(
+                                url.getText().toString(),
+                                "/personas_rs",
+                                new HashMap<String, String>(),
+                                "application/x-www-form-urlencoded;charset=UTF-8",
+                                "application/xml",
+                                "",
+                                "GET",
+                                auth,
+                                10000,
+                                10000);
+                    }
 
                     if (isCancelled())  return false;
 
